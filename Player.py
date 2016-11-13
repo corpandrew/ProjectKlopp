@@ -82,9 +82,6 @@ class Player:
         self.baseId = baseId
         self.rating = rating
 
-    def __str__(self):
-        return 'Player Name = ' + self.name + "\t\t\tNationality = " + self.nationality
-
     def getCommonName(self):
         return self.commonName
 

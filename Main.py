@@ -2,9 +2,84 @@ import json
 import urllib.request
 
 from Player import *
+from League import *
+from Nation import *
+from Club import *
+
+commonName = None
+firstName = None
+headshotImgUrl = None
+lastName = None
+
+league = None
+nation = None
+club = None
+
+largeTOTWImgUrl = None
+position = None
+playStyle = None
+playStyleId = None
+height = None
+weight = None
+birthdate = None
+age = None
+aggression = None
+agility = None
+balance = None
+ballcontrol = None
+foot = None
+skillMoves = None
+crossing = None
+curve = None
+dribbling = None
+finishing = None
+freekickaccuracy = None
+gkdiving = None
+gkhandling = None
+gkpositioning = None
+gkreflexes = None
+headingaccuracy = None
+interceptions = None
+jumping = None
+longpassing = None
+longshots = None
+marking = None
+penalties = None
+positioning = None
+potential = None
+reactions = None
+shortpassing = None
+shotpower = None
+slidingtackle = None
+stamina = None
+strength = None
+vision = None
+volleys = None
+weakfoot = None
+
+traits = []
+specialties = []
+attributes = []
+
+name = None
+quality = None
+color = None
+isGk = None
+positionFull = None
+isSpecialType = None
+contracts = None
+fitness = None
+rawAttributeChemistryBonus = None
+isLoan = None
+squadPosition = None
+itemType = None
+discardValue = None
+id = None
+modelName = None
+baseId = None
+rating = None
 
 players = []
-form442 = ['']
 
 
 def downloadAndParse(i):
@@ -28,33 +103,110 @@ def parse(i):
 
     jsonObject = json.loads(jsonFileString)
 
-    for player in jsonObject['items']:
+    for p in jsonObject['items']:
+        commonName = p['commonName']
+        firstName = p['firstName']
+        headshotImgUrl = p['headshotImgUrl']
+        lastName = p['lastName']
+
+        league = League(p['league']['abbrName'], p['league']['id'], p['league']['imgUrl'], p['league']['name'])
+        nation = Nation(p['nation']['imageUrls']['large'], p['nation']['abbrName'], p['nation']['id'], None,
+                        p['nation']['name'])
+        club = Club(p['club']['imageUrls']['dark']['large'], p['club']['imageUrls']['normal']['large'],
+                    p['club']['abbrName'], p['club']['id'], p['club']['imgUrl'], ['name'])
+
+        largeTOTWImgUrl = p['specialImages']['largeTOTWImgUrl']
+        position = p['position']
+        playStyle = p['playStyle']
+        playStyleId = p['playStyleId']
+        height = p['height']
+        weight = p['weight']
+        birthdate = p['birthdate']
+        age = p['age']
+        aggression = p['aggression']
+        agility = p['agility']
+        balance = p['balance']
+        ballcontrol = p['ballcontrol']
+        foot = p['foot']
+        skillMoves = p['skillMoves']
+        crossing = p['crossing']
+        curve = p['curve']
+        dribbling = p['dribbling']
+        finishing = p['finishing']
+        freekickaccuracy = p['freekickaccuracy']
+        gkdiving = p['gkdiving']
+        gkhandling = p['gkhandling']
+        gkpositioning = p['gkpositioning']
+        gkreflexes = p['gkreflexes']
+        headingaccuracy = p['headingaccuracy']
+        interceptions = p['interceptions']
+        jumping = p['jumping']
+        longpassing = p['longpassing']
+        longshots = p['longshots']
+        marking = p['marking']
+        penalties = p['penalties']
+        positioning = p['positioning']
+        potential = p['potential']
+        reactions = p['reactions']
+        shortpassing = p['shortpassing']
+        shotpower = p['shotpower']
+        slidingtackle = p['slidingtackle']
+        stamina = p['stamina']
+        strength = p['strength']
+        vision = p['vision']
+        volleys = p['volleys']
+        weakfoot = None
+
+        # for value in p['traits']:
+        #     traits.append(str(value))
+
+        # for value in p['specialties']:
+        #     specialties.append(str(value))
+        # specialties = None
+        # for value in p['attributes']:
+        #     attributes.append(str(value))
+
+        name = p['name']
+        quality = p['quality']
+        color = p['color']
+        isGk = None
+        positionFull = p['positionFull']
+        isSpecialType = p['isSpecialType']
+        contracts = p['contracts']
+        fitness = p['fitness']
+        rawAttributeChemistryBonus = p['rawAttributeChemistryBonus']
+        isLoan = p['isLoan']
+        squadPosition = p['squadPosition']
+        itemType = p['itemType']
+        discardValue = p['discardValue']
+        id = p['id']
+        modelName = p['modelName']
+        baseId = p['baseId']
+        rating = p['rating']
         players.append(
-            Player(player['firstName'] + ' ' + player['lastName'], player['nation']['name'], player['club']['name'],
-                   player['position']))
+            Player(commonName, firstName, headshotImgUrl, lastName, league, nation, club, largeTOTWImgUrl, position,
+                   playStyle, playStyleId, height, weight, birthdate, age, aggression, agility, balance, ballcontrol,
+                   foot, skillMoves, crossing, curve, dribbling, finishing, freekickaccuracy, gkdiving, gkhandling,
+                   gkpositioning, gkreflexes, headingaccuracy, interceptions, jumping, longpassing, longshots, marking, penalties,
+                   positioning, potential, reactions, shortpassing, shotpower, slidingtackle, stamina, strength, vision,
+                   volleys, weakfoot, traits, specialties, attributes, name, quality, color, isGk, positionFull,
+                   isSpecialType, contracts, fitness, rawAttributeChemistryBonus, isLoan, squadPosition, itemType,
+                   discardValue, id, modelName, baseId, rating))
 
 
-#
-# for i in range(1,623):
-#     parse(i)
+for i in range(1, 623):
+    parse(i)
 
-vars = "darkLargeImageUrl, normalLargeImageUrl, abbrName, id, imgUrl, name"
-for var in vars.split(','):
-    print('self.' + var.strip() + ' = ' + var.strip())
-
-for var in vars.split(','):
-    print('def get' + var.strip()[0].upper() + var.strip()[1:] + '(self):\nreturn self.' + var.strip())
-
-    # while True:
-    #     text = str(input('What would you like to be printed?: '))
-    #     if(text.__contains__('name=')):
-    #         for player in players:
-    #             if (player.getName() == text[5:].strip()):
-    #                 print(player)
-    #     elif(text.__contains__('form=4-4-2') or text.__contains__('form=442')):
-    #         for player in players:
-    #             print(player)
-    #             # print(team + ' players: \n')
-    #             # for player in players:
-    #             #     if(player.getTeamName() == team):
-    #             #         print(player)
+while True:
+    text = str(input('What would you like to be printed?: '))
+    if (text.__contains__('name=')):
+        for player in players:
+            if ((str(player.getFirstName()) + ' ' + str(player.getLastName())).__contains__(text[5:].strip())):
+                print(str(player.getFirstName()) + ' ' + str(player.getLastName()) + '\t' + str(player.getPosition()))
+                # elif(text.__contains__('form=4-4-2') or text.__contains__('form=442')):
+                #     for player in players:
+                #         print(player)
+                # print(team + ' players: \n')
+                # for player in players:
+                #     if(player.getTeamName() == team):
+                #         print(player)
