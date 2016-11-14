@@ -81,6 +81,15 @@ rating = None
 
 players = []
 
+formation3412 = ['ST', 'ST', 'LM', 'CAM', 'RM', 'CM', 'CM', 'CB', 'CB', 'CB', 'GK']
+formation3421 = ['LF', 'ST', 'RF', 'LM', 'CM', 'CM', 'RM', 'CB', 'CB', 'CB', 'GK']
+formation343 = ['LW', 'ST', 'RW', 'LM', 'CM', 'CM', 'RM', 'CB', 'CB', 'CB', 'GK']
+formation352 = ['ST', 'ST', 'LM', 'CAM', 'RM', 'CDM', 'CDM', 'CB', 'CB', 'CB', 'GK']
+
+formation442 = ['ST', 'ST', 'LM', 'CM', 'CM', 'RM', 'LB', 'CB', 'CB', 'RB', 'GK']
+formation433 = ['LW', 'ST', 'RW', 'LM', 'CM', 'RM', 'LB', 'CB', 'CB', 'RB', 'GK']
+playersUsed = []
+
 
 def downloadAndParse(i):
     url = 'http://www.easports.com/fifa/ultimate-team/api/fut/item?page=' + str(i)
@@ -99,7 +108,7 @@ def downloadAndParse(i):
 
 
 def parse(i):
-    jsonFileString = open('fut' + str(i) + '.json').read()
+    jsonFileString = open('FUTS/fut' + str(i) + '.json').read()
 
     jsonObject = json.loads(jsonFileString)
 
@@ -187,8 +196,9 @@ def parse(i):
             Player(commonName, firstName, headshotImgUrl, lastName, league, nation, club, largeTOTWImgUrl, position,
                    playStyle, playStyleId, height, weight, birthdate, age, aggression, agility, balance, ballcontrol,
                    foot, skillMoves, crossing, curve, dribbling, finishing, freekickaccuracy, gkdiving, gkhandling,
-                   gkpositioning, gkreflexes, headingaccuracy, interceptions, jumping, longpassing, longshots, marking, penalties,
-                   positioning, potential, reactions, shortpassing, shotpower, slidingtackle, stamina, strength, vision,
+                   gkpositioning, gkreflexes, headingaccuracy, interceptions, jumping, longpassing, longshots, marking,
+                   penalties, positioning, potential, reactions, shortpassing, shotpower, slidingtackle, stamina,
+                   strength, vision,
                    volleys, weakfoot, traits, specialties, attributes, name, quality, color, isGk, positionFull,
                    isSpecialType, contracts, fitness, rawAttributeChemistryBonus, isLoan, squadPosition, itemType,
                    discardValue, id, modelName, baseId, rating))
@@ -203,10 +213,39 @@ while True:
         for player in players:
             if ((str(player.getFirstName()) + ' ' + str(player.getLastName())).__contains__(text[5:].strip())):
                 print(str(player.getFirstName()) + ' ' + str(player.getLastName()) + '\t' + str(player.getPosition()))
-                # elif(text.__contains__('form=4-4-2') or text.__contains__('form=442')):
-                #     for player in players:
-                #         print(player)
-                # print(team + ' players: \n')
-                # for player in players:
-                #     if(player.getTeamName() == team):
-                #         print(player)
+    elif (text.__contains__('form=') or text.__contains__('form=')):
+        searchText = text.split('form=')[1]
+        teamToMake = str(input('Which team would you like to create the ' + searchText + ' formation for?: '))
+        print(searchText)
+        print(teamToMake)
+        formationToCreate = None
+
+        for i in range(0, 20):
+            print('---------------------------------- Team = ' + str(i) + ' ----------------------------------\n\n\n')
+            playersToMake = []
+            formation442 = ['ST', 'ST', 'LM', 'CM', 'CM', 'RM', 'LB', 'CB', 'CB', 'RB', 'GK']
+            formation433 = ['LW', 'ST', 'RW', 'LM', 'CM', 'RM', 'LB', 'CB', 'CB', 'RB', 'GK']
+            formation343 = ['LW', 'ST', 'RW', 'LM', 'CM', 'CM', 'RM', 'CB', 'CB', 'CB', 'GK']
+
+            if (searchText == '442'):
+                formationToCreate = formation442
+            elif (searchText == '433'):
+                formationToCreate = formation433
+            elif (searchText == '343'):
+                formationToCreate = formation343
+
+            for i in range(len(formationToCreate)):
+                for j in range(len(players) - 1):
+                    if (len(formationToCreate) != 0):
+                        if (str(players[j].getPosition()) ==
+                                formationToCreate[i] and str(players[j].getNation().getAbbrName()) == str(teamToMake)):
+                            if not (playersUsed.__contains__(players[j].getBaseId())):
+                                playersToMake.append(players[j])
+                                formationToCreate.pop(i)
+                                playersUsed.append(players[j].getBaseId())
+                    else:
+                        break
+            for player in playersToMake:
+                print(str(player.getFirstName()) + ' ' + str(player.getLastName()) + '\t' + str(
+                    player.getPosition()) + '\t' + str(player.getRating()))
+
