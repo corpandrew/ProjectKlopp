@@ -214,6 +214,7 @@ while True:
             if ((str(player.getFirstName()) + ' ' + str(player.getLastName())).__contains__(text[5:].strip())):
                 print(str(player.getFirstName()) + ' ' + str(player.getLastName()) + '\t' + str(player.getPosition()))
     elif (text.__contains__('form=') or text.__contains__('form=')):
+        # Andrew fix this please, it finds lousy players.
         searchText = text.split('form=')[1]
         teamToMake = str(input('Which team would you like to create the ' + searchText + ' formation for?: '))
         print(searchText)
